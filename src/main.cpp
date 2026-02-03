@@ -24,6 +24,7 @@ void setup() {
 
 void loop() {
   static int prev_sensorValue = 0;
+  
   int sensorValue = analogRead(Sensor_pin);
   int delta = abs(sensorValue - prev_sensorValue);
   prev_sensorValue = sensorValue;
