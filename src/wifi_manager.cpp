@@ -156,12 +156,12 @@ static const char index_html[] PROGMEM = R"rawliteral(
             <p id="breachText">No smoke breaches detected so far.</p>
             <button onclick="showBreachHistory()">View Breach History</button>
         </div>
-    </div>
-
-    <div class="section" id="breachHistory" style="display:none;">
-        <h3>Breach History</h3>
-        <ul id="breachList" style="color:#ccc;"></ul>
-        <button onclick="document.getElementById('breachHistory').style.display='none'">Close</button>
+        
+        <div class="section" id="breachHistory" style="display:none;">
+            <h3>Breach History</h3>
+            <ul id="breachList" style="color:#ccc;"></ul>
+            <button onclick="document.getElementById('breachHistory').style.display='none'">Close</button>
+        </div>
     </div>
 
     <script>
