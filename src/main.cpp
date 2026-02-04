@@ -1,5 +1,4 @@
-#include <Arduino.h>
-#include <wifi_manager.h>
+#include "wifi_manager.h"
 
 #define DEBUG
 
@@ -9,7 +8,7 @@ const int Sensor_pin = 32;
 const int QualityLimit = 1500;
 const int deviationLimit = 250;
 
-wifi_manager wifi(80);
+DeviceServer wifi(80);
 
 void setup() {
   Serial.begin(115200);
@@ -21,14 +20,14 @@ void setup() {
   Serial.println("running...");
   #endif
   
-  (wifi.begin())? Serial.println("WiFi started successfully!") : Serial.println("Failed to start WiFi!");
+  (wifi.begin(Sensor_pin))? Serial.println("WiFi started successfully!") : Serial.println("Failed to start WiFi!");
 
   pinMode(LED_pins, OUTPUT);
   pinMode(Sensor_pin, INPUT);
 }
 
 void loop() {
-  wifi.manageClient(Sensor_pin);
+  wifi.handle();
   static int prev_sensorValue = 0;
   
   int sensorValue = analogRead(Sensor_pin);
