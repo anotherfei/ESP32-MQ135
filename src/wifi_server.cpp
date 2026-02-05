@@ -223,6 +223,7 @@ static const char index_html[] PROGMEM = R"rawliteral(
     <script>
         let breachCount = 0;
         let Updated = false;
+        let alertGiven = false;
         let breachHistory = [];
 
         let prevScore = null;
@@ -272,13 +273,16 @@ static const char index_html[] PROGMEM = R"rawliteral(
                 el.textContent = s;
 
                 let spikeAlert = false;
+                
                 if (prevScore !== null) {
                     spikeAlert = Math.abs(s - prevScore) > DEVIATION_LIMIT;
                 }
 
-                if (spikeAlert) {
-                    alert('Sudden change in air quality detected.\nPossible increase in active smoke or ignition sources.');
-                    spikeAlert = false;
+                if (spikeAlert && !alertGiven) {
+                    showWarning();
+                    alertGiven = true;
+                } else {
+                    alertGiven = false;
                 }
 
                 if (s <= 400) {
@@ -350,6 +354,30 @@ static const char index_html[] PROGMEM = R"rawliteral(
             document.getElementById('alertOverlay').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
+
+        function showWarning() {
+            const toast = document.createElement('div');
+            toast.textContent =
+                '⚠️ Sudden change in air quality detected. Possible increase in active smoke sources.';
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #1c1917;
+                color: #fde68a;
+                padding: 12px 18px;
+                border-radius: 8px;
+                font-size: 15px;
+                z-index: 9999;
+                box-shadow: 0 0 20px rgba(251,146,60,0.5);
+                border-left: 5px solid #fb923c;
+            `;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 7000);
+        }
+
 
         setInterval(load, 1000);
         load();
