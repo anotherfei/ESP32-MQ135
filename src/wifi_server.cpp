@@ -193,7 +193,7 @@ static const char index_html[] PROGMEM = R"rawliteral(
         </header>
 
         <div class="section">
-            <h3>Real-time Air Quality Index</h3>
+            <h3>Real-time Gas Density (%)</h3>
             <div id="score" class="aqi">--</div>
             <p id="statusText">Waiting for sensor…</p>
         </div>
@@ -227,7 +227,7 @@ static const char index_html[] PROGMEM = R"rawliteral(
         let breachHistory = [];
 
         let prevScore = null;
-        const DEVIATION_LIMIT = 200;
+        const DEVIATION_LIMIT = 10;
 
         document.getElementById('userID').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -266,16 +266,16 @@ static const char index_html[] PROGMEM = R"rawliteral(
             try {
                 const r = await fetch('/aqi');
                 const d = await r.json();
-                const s = d.score;
-
+                const s = parseFloat(d.score);
+                
                 const el = document.getElementById('score');
                 const st = document.getElementById('statusText');
-                el.textContent = s;
+                el.textContent = s.toFixed(2);
 
                 let spikeAlert = false;
                 
                 if (prevScore !== null) {
-                    spikeAlert = Math.abs(s - prevScore) > DEVIATION_LIMIT;
+                    spikeAlert = (s - prevScore) > DEVIATION_LIMIT;
                 }
 
                 if (spikeAlert && !alertGiven) {
@@ -285,13 +285,13 @@ static const char index_html[] PROGMEM = R"rawliteral(
                     alertGiven = false;
                 }
 
-                if (s <= 400) {
+                if (s <= 40) {
                     el.style.color = '#10b981';
-                    st.textContent = 'Air quality is excellent — enjoy fresh air and keep smoke-free habits.';
+                    st.textContent = 'Air quality is safe — enjoy fresh air and keep smoke-free habits.';
                     Updated = false;
-                } else if (s <= 1200) {
+                } else if (s <= 60) {
                     el.style.color = '#facc15';
-                    st.textContent = 'Air quality is acceptable — avoid unnecessary smoking to prevent worsening conditions.';
+                    st.textContent = 'Air quality is a bit poor — avoid unnecessary smoking to prevent worsening conditions.';
                     Updated = false;
                 } else {
                     el.style.color = '#ef4444';

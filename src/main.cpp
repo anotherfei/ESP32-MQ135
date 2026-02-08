@@ -5,12 +5,12 @@
 const int LED_pins = 26;
 const int Sensor_pin = 32;
 
-const int QualityLimit = 1200;
-const int deviationLimit = 250;
+const int QualityLimit = 60;
+const int deviationLimit = 10;
 
 DeviceServer wifi(80);
 
-int airQuality = 0;
+float airQuality = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -33,10 +33,12 @@ void loop() {
   static int prev_sensorValue = 0;
   
   int sensorValue = analogRead(Sensor_pin);
-  int delta = abs(sensorValue - prev_sensorValue);
   
-  airQuality = map(analogRead(Sensor_pin), 100, 2500, 50, 2000);
-  airQuality = constrain(airQuality, 50, 2000);
+  airQuality = (sensorValue / 2500.0f) * 100.0f;
+  airQuality = constrain(airQuality, 0.0f, 100.0f);
+
+  float prev_airQuality = prev_sensorValue? (prev_sensorValue / 2500.0f) * 100.0f : 0.0f; 
+  float delta = airQuality - prev_airQuality;
   
   bool Alert = (prev_sensorValue != 0 && delta > deviationLimit);
   bool Danger = (airQuality > QualityLimit);

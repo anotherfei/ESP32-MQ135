@@ -4,7 +4,7 @@
 #include <WebServer.h>
 #include <IPAddress.h>
 
-extern int airQuality;
+extern float airQuality;
 
 struct user_data {
     const char* user;
