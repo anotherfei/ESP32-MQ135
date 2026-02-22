@@ -24,8 +24,9 @@ The ESP32 runs in **Wi-Fi Access Point mode**.
 - **Password:** `esp32wifi`  
 - **Web Interface:**  
   👉 `http://192.168.4.1`
-      **Username:** `AirSense_Guest`
-      **Password:** `guest123`
+     
+  **Username:** `AirSense_Guest`  
+  **Password:** `guest123`
 
 Once connected, the dashboard displays live air quality updates and visual alerts.
 
